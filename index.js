@@ -35,15 +35,15 @@ const yScale = d3.scaleLinear()
     .domain([0, 40])
     .range([height - margin.bottom, margin.top]);
 
-// Add x-axis
+//  x-axis
 const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("d"));
 svg.append("g")
     .attr("transform", `translate(0,${height - margin.bottom})`)
     .call(xAxis)
     .selectAll("text")
-    .style("fill", "white"); // Set text color to white
+    .style("fill", "white"); // the color of the label to white
 
-// Add x-axis label
+// x-axis label
 svg.append("text")
     .attr("x", width / 2)
     .attr("y", height - margin.bottom + 40)
@@ -51,7 +51,7 @@ svg.append("text")
     .style("text-anchor", "middle")
     .text("Years");
 
-// Add y-axis
+//  y-axis
 const yAxis = d3.axisLeft(yScale);
 svg.append("g")
     .attr("transform", `translate(${margin.left},0)`)
@@ -59,7 +59,7 @@ svg.append("g")
     .selectAll("text")
     .style("fill", "white"); // Set text color to white
 
-// Add y-axis label
+//  y-axis label
 svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("x", -height / 2)
@@ -70,30 +70,32 @@ svg.append("text")
 
 // Compute the center of the circle using the average SST and the year
 const avgSST = d3.mean(data1983, d => d.SST);
-const centerX = xScale(1982); // Year 1982 as per your data
-const centerY = yScale(avgSST);
+const centerX = xScale(1982); // the circle is set at 1982 at x-axis
+const centerY = yScale(avgSST); //the circle is set at 20.05 at y-axis
 
-// Draw the central circle
+// the central circle
 svg.append("circle")
     .attr("cx", centerX)
     .attr("cy", centerY)
     .attr("r", radius)
     .attr("class", "circle")
-    .style("stroke", "white");
+    .style("stroke", "red");
 
-// The points around the circle 
+// the points around the circle 
 const angleScale = d3.scaleLinear()
     .domain([0, 12]) // Start from 0 to 12 for equal spacing
     .range([0, 2 * Math.PI]); // This starts from 0 to 2 * Math.PI
 
-// Define anomaly scale to map anomaly values to distances from the circle's edge
+//the max of anomaly
 const anomalyMax = d3.max(data1983, d => d.anomaly);
+
 
 const anomalyScale = d3.scaleLinear()
     .domain([0, anomalyMax])
-    .range([0, anomalyOffset]); // Adjust distance for the anomaly points
+    .range([0, anomalyOffset]); //this is from 0 to 200 which is how long from the circle it can be
 
 
+    //the seasons of the data, which is mapped to colors after
     var arrayColors = [...new Set(data1983.map(d => d.season))];
 
     var colorScale = d3.scaleOrdinal()
@@ -119,7 +121,7 @@ const points1983 = data1983.map(d => {
     };
 });
 
-// Draw anomaly points for data1983
+// the anomaly points for data1983 drawned 
 svg.selectAll(".anomaly-point-1983")
     .data(points1983)
     .enter()
@@ -130,7 +132,8 @@ svg.selectAll(".anomaly-point-1983")
     .attr("r", circleRadius)
     .style("fill", d => colorScale(d.season));
 
-// Calculate touching points on the central circle for data1983
+
+// this is a helping function/variable: the paths from points is touching on the central circle 
 const touchingPoints1983 = data1983.map(d => {
     const angle = angleScale(d.month - 1);
     return {
@@ -140,32 +143,34 @@ const touchingPoints1983 = data1983.map(d => {
     };
 });
 
-// Create path points that include both the central circle touching points and the anomaly points for data1983
+
+
+// creates path points that include both the central circle touching points and the anomaly points for data1983
 const pathPoints1983 = touchingPoints1983.map((tp, i) => {
     const nextIndex = (i + 1) % touchingPoints1983.length;
     const nextTp = touchingPoints1983[nextIndex];
     const anomalyPoint = points1983[i];
     
     return [
-        tp, // Touching point
-        anomalyPoint, // Anomaly point
-        nextTp // Next touching point
+        tp, // touching point
+        anomalyPoint, // anomaly point
+        nextTp // next touching point
     ];
 }).flat();
 
 
 
-// Draw path connecting the points for data1983
+// draw path connecting the points for data1983
 const line = d3.line()
     .x(d => d.x)
     .y(d => d.y)
-    .curve(d3.curveLinear); // Smooth curve
+    .curve(d3.curveLinear); // smooth curve
 
 svg.append("path")
     .data([pathPoints1983])
     .attr("class", "line-1983")
     .attr("d", line)
-    .style("stroke", function(d){ return colorScale(d.season)})
+    .style("stroke", "red")
     .style("fill", "none");
 
 // Set axis path color to white
