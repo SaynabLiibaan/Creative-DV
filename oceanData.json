@@ -1,23 +1,84 @@
 [
-	{
-	  "continent": "Africa",
-	  "sst_average": 21.5,
-	  "month 1": 1.62,
-	  "month 2": 2.46,
-	  "month 3": 1.58,
-	  "month 4": 1.86,
-	  "month 5": 1.19,
-	  "month 6": 1.05,
-	  "month 7": 0.93,
-	  "month 8": 0.99,
-	  "month 9": 0.83,
-	  "month 10": 1.21,
-	  "month 11": 1.35,
-	  "month 12": 1.03
-	  
-	  
-	}
+	[
+	{ "year": 1982, "SST": 20.05, "month": 1, "anomaly": -0.29 },
+    { "year": 1982, "SST": 20.05, "month": 2, "anomaly": 0.23 },
+    { "year": 1992, "SST": 20.05, "month": 3, "anomaly": -0.26 },
+    { "year": 1982, "SST": 20.05, "month": 4, "anomaly": 0.06 },
+    { "year": 1982, "SST": 20.05, "month": 5, "anomaly": 0.03 },
+    { "year": 1982, "SST": 20.05, "month": 6, "anomaly": -0.15 },
+    { "year": 1982, "SST": 20.05, "month": 7, "anomaly": 0.25 },
+    { "year": 1982, "SST": 20.05, "month": 8, "anomaly": -0.03},
+    { "year": 1982, "SST": 20.05, "month": 9, "anomaly": 0.02},
+    { "year": 1982, "SST": 20.05, "month": 10, "anomaly": -0.14 },
+    { "year": 1982, "SST": 20.05, "month": 11, "anomaly": -0.16 },
+    { "year": 1982, "SST": 20.05, "month": 12, "anomaly": 0.64}
+	], 
+
+
+  	[
+	{ "year": 1992, "SST": 0, "month": 1, "anomaly": 0.78},
+    { "year": 1992, "SST": 0, "month": 2, "anomaly": 0.71 },
+    { "year": 1992, "SST": 0, "month": 3, "anomaly": 0.82 },
+    { "year": 1992, "SST": 0, "month": 4, "anomaly": 0.20 },
+    { "year": 1992, "SST": 0, "month": 5, "anomaly": 0.33 },
+    { "year": 1992, "SST": 0, "month": 6, "anomaly": 0.19 },
+    { "year": 1992, "SST": 0, "month": 7, "anomaly": -0.09 },
+    { "year": 1992, "SST": 0, "month": 8, "anomaly": -0.08 },
+    { "year": 1992, "SST": 0, "month": 9, "anomaly": -0.31 },
+    { "year": 1992, "SST": 0, "month": 10, "anomaly": -0.14 },
+    { "year": 1992, "SST": 0, "month": 11, "anomaly": -0.16 },
+    { "year": 1992, "SST": 0, "month": 12, "anomaly": 0.26 }
+ 	], 
+
+	[
+	{ "year": 2002, "SST": 0, "month": 1, "anomaly": 1.18 },
+    { "year": 2002, "SST": 0, "month": 2, "anomaly": 1.13 },
+    { "year": 2002, "SST": 0, "month": 3, "anomaly": 1.52 },
+    { "year": 2002, "SST": 0, "month": 4, "anomaly": 0.68 },
+    { "year": 2002, "SST": 0, "month": 5, "anomaly": 1.00 },
+    { "year": 2002, "SST": 0, "month": 6, "anomaly": 0.73 },
+    { "year": 2002, "SST": 0, "month": 7, "anomaly": 0.99 },
+    { "year": 2002, "SST": 0, "month": 8, "anomaly": 0.82 },
+    { "year": 2002, "SST": 0, "month": 9, "anomaly": 0.93 },
+    { "year": 2002, "SST": 0, "month": 10, "anomaly": 0.79 },
+    { "year": 2002, "SST": 0, "month": 11, "anomaly": 0.87 },
+    { "year": 2002, "SST": 0, "month": 12, "anomaly": 0.57}
+	],
+
+	[
+	{ "year": 2012, "SST": 0, "month": 1, "anomaly": 0.87 },
+	{ "year": 2012, "SST": 0, "month": 2, "anomaly": 0.82},
+	{ "year": 2012, "SST": 0, "month": 3, "anomaly": 1.87 },
+	{ "year": 2012, "SST": 0, "month": 4, "anomaly": 1.38 },
+	{ "year": 2012, "SST": 0, "month": 5, "anomaly": 1.33 },
+	{ "year": 2012, "SST": 0, "month": 6, "anomaly": 1.16 },
+	{ "year": 2012, "SST": 0, "month": 7, "anomaly": 0.87 },
+	{ "year": 2012, "SST": 0, "month": 8, "anomaly": 0.93 },
+	{ "year": 2012, "SST": 0, "month": 9, "anomaly": 1.16 },
+	{ "year": 2012, "SST": 0, "month": 10, "anomaly": 1.32 },
+	{ "year": 2012, "SST": 0, "month": 11, "anomaly": 1.29 },
+	{ "year": 2012, "SST": 0, "month": 12, "anomaly": 0.60}
+	],
+
+	[
+	{ "year": 2022, "SST": 0, "month": 1, "anomaly": 1.50 },
+	{ "year": 2022, "SST": 0, "month": 2, "anomaly": 1.48},
+	{ "year": 2022, "SST": 0, "month": 3, "anomaly": 2.01  },
+	{ "year": 2022, "SST": 0, "month": 4, "anomaly": 1.44 },
+	{ "year": 2022, "SST": 0, "month": 5, "anomaly": 1.23 },
+	{ "year": 2022, "SST": 0, "month": 6, "anomaly": 1.40 },
+	{ "year": 2022, "SST": 0, "month": 7, "anomaly": 1.36 },
+	{ "year": 2022, "SST": 0, "month": 8, "anomaly": 1.35 },
+	{ "year": 2022, "SST": 0, "month": 9, "anomaly": 1.27 },
+	{ "year": 2022, "SST": 0, "month": 10, "anomaly": 1.61 },
+	{ "year": 2022, "SST": 0, "month": 11, "anomaly": 0.94 },
+	{ "year": 2022, "SST": 0, "month": 12, "anomaly": 1.17}
+
+
+
+	]
+
+
 
 
   ]
-  
