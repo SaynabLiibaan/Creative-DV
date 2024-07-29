@@ -1,10 +1,11 @@
 const width = 1000;
 const height = 960;
-const radius = 50;
+const radius = 90;
 const anomalyOffset = 100; // from circle to points
-const circleRadius = 2;
+const circleRadius = 2 + 4;
 const transitionDuration = 2000; // transition duration in milliseconds
 const years = [1982, 1992, 2002, 2012, 2022];
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 const svg = d3
   .select("#myVis")
@@ -19,9 +20,7 @@ d3.json("oceanData.json")
     oceanData = data;
     animate();
   })
-  .catch(function (error) {
-    console.error("Error loading the data:", error);
-  });
+  
 
 function getSeasonColor(season) {
   if ((season === "winter")) {
@@ -39,54 +38,53 @@ function animate() {
   let yearIndex = 0;
 
   function update() {
-    const tempData = oceanData[yearIndex]; // Access the data for the current year
-    console.log(tempData);
+    const tempData = oceanData[yearIndex]; 
+    console.log("tempData is: " + tempData);
 
     const avgSST = d3.mean(tempData, (d) => d.SST);
     const centerX = width / 2;
     const centerY = height / 2;
 
-    //Retrieve the SST's for each year and put into an array for domain.
     var AverageSSTofYears = [];
 
     oceanData.forEach((d) => {
       if (d.length > 0) {
-        // First months SST of the year, since the SST is the same for every month
         AverageSSTofYears.push(d[0].SST);
       }
     });
 
-    console.log(AverageSSTofYears);
+    console.log("AverageSSTofYears: " + AverageSSTofYears);
 
     const minSST = d3.min(AverageSSTofYears);
     const maxSST = d3.max(AverageSSTofYears);
 
-    // Color scale for SST
+
     const colorScale = d3
       .scaleLinear()
-      .domain([minSST, maxSST]) // Adjust the domain based on the SST range
-      .range(["blue", "red"]); // Blue for cold, red for hot
+      .domain([minSST, maxSST]) 
+      .range(["blue", "red"]); 
 
-   // Angle scale for positioning points around the circle, with 0 degrees at the top
-   const angleScale = d3.scaleLinear()
-   .domain([0, 12]) // Start from 0 to 12 for equal spacing
-   .range([-Math.PI / 2, 3 * Math.PI / 2]); // Start from -90 degrees to 270 degrees
+    
+    const angleScale = d3.scaleLinear()
+      .domain([0, 12]) 
+      .range([-Math.PI / 2, 3 * Math.PI / 2]); 
 
 
-    // Max anomaly for scaling
+    
     const anomalyMax = d3.max(tempData, (d) => d.anomaly);
 
     const anomalyScale = d3
       .scaleLinear()
       .domain([0, anomalyMax])
-      .range([0, anomalyOffset]); // This is from 0 to 100 which is how far from the circle it can be
+      .range([0, anomalyOffset]); 
 
-    // Calculate points for the current year
+ 
     const points = tempData.map((d) => {
-      const angle = angleScale(d.month - 1); // Adjust to start from 0 for equal spacing
-      const scaledRadius = radius + anomalyScale(d.anomaly); // Distance from center
+      const angle = angleScale(d.month - 1); 
+      const scaledRadius = radius + anomalyScale(d.anomaly); 
 
       return {
+        month: d.month,
         season: d.season,
         x: centerX + scaledRadius * Math.cos(angle),
         y: centerY + scaledRadius * Math.sin(angle),
@@ -95,9 +93,9 @@ function animate() {
       };
     });
 
-    const label = svg.selectAll(".label").data([years[yearIndex]]); // Use the current year as data
+    const label = svg.selectAll(".label").data([years[yearIndex]]); 
 
-    // Enter selection for adding new labels
+    
     label
       .enter()
       .append("text")
@@ -108,9 +106,9 @@ function animate() {
       .style("fill", "white") 
       .style("font-size", "40px")
       .style("text-anchor", "middle")
-      .text(years[yearIndex]); // Update the text after fading out
+      .text(years[yearIndex]); 
 
-    // Update central circle
+    
     const circle = svg.selectAll(".circle").data([avgSST]);
 
     circle
@@ -126,7 +124,7 @@ function animate() {
       .style("stroke", "red")
       .style("fill", colorScale(avgSST));
 
-    // Update anomaly points
+    
     const anomalyPoints = svg.selectAll(".anomaly-point").data(points);
 
     anomalyPoints
@@ -149,10 +147,64 @@ function animate() {
 
     anomalyPoints.exit().remove();
 
-    // Schedule the next update
+  
+    var infoBox = svg.append("rect")
+          .attr("class", "box")
+          .attr("height", 20)
+          .attr("width", 60)
+          .style("fill", "rgba(255, 255, 255, 0.6)")
+          .style("opacity", 0);
+
+    var textBox = svg.append("text")
+          .style("font-size", 12)
+          .style("fill", "rgba(2, 38, 132, 0.91)")
+          .style("stroke", "black")
+          .style("stroke-width", "0.55px")
+          .style("opacity", 0);
+
+    function showInfo(x, y, d) {
+        infoBox.transition()
+                .duration(100)
+                .style("opacity", 1)
+                .attr("x", x + 10)
+                .attr("y", y - 20);
+
+        textBox.transition()
+                .duration(100)
+                .style("opacity", 1)
+                .attr("x", x + 15)
+                .attr("y", y - 5)
+                .text(monthNames[d.month - 1]);
+    }
+
+    function hideInfo() {
+        infoBox.transition()
+                .duration('200')
+                .style("opacity", 0);
+        textBox.transition()
+                .duration('200')
+                .style("opacity", 0);
+    }
+
+    
+    anomalyPoints.on("mouseover", function(event, d) {
+          d3.select(this).transition()
+            .duration("100")
+            .attr("r", 10);
+          showInfo(d.x, d.y, d)
+        })
+        anomalyPoints.on("mouseout", function(d) {
+          d3.select(this).transition()
+            .duration("100")
+            .attr("r", circleRadius);
+          hideInfo();
+        })
+    
     yearIndex = (yearIndex + 1) % years.length;
     setTimeout(update, transitionDuration);
   }
 
-  update();
+  update()
 }
+
+hideInfo();
