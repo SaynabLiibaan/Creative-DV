@@ -39,9 +39,8 @@ function animate() {
 
         // Angle scale for positioning points around the circle
         const angleScale = d3.scaleLinear()
-            .domain([0, 12]) // Start from 0 to 12 for equal spacing
-            .range([0, 2 * Math.PI]); // This starts from 0 to 2 * Math.PI
-
+        .domain([0, 12]) // Start from 0 to 12 for equal spacing
+        .range([-Math.PI / 2, 3 * Math.PI / 2]);
         // Max anomaly for scaling
         const anomalyMax = d3.max(tempData, d => d.anomaly);
 
