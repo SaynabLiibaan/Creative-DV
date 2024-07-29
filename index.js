@@ -32,10 +32,10 @@ function animate() {
         const centerX = width / 2;
         const centerY = height / 2;
 
-        // Color scale for SST
+        // This is the color scale for SST
         const colorScale = d3.scaleLinear()
-            .domain([0, 40]) // Adjust the domain based on the SST range
-            .range(["blue", "red"]); // Blue for cold, red for hot
+            .domain([0, 40]) // the SST range - it can change here maybe smaller range?
+            .range(["blue", "red"]); // just change the colors of what suits you honeyyy
 
         // Angle scale for positioning points around the circle
         const angleScale = d3.scaleLinear()
@@ -47,7 +47,7 @@ function animate() {
 
         const anomalyScale = d3.scaleLinear()
             .domain([0, anomalyMax])
-            .range([0, anomalyOffset]); // This is from 0 to 100 which is how far from the circle it can be
+            .range([0, anomalyOffset]); // this is from 0 to 100 which is how far from the circle it can be, not too long honey
 
         // Calculate points for the current year
         const points = tempData.map(d => {
@@ -62,10 +62,11 @@ function animate() {
             };
         });
 
-        // Update central circle
+        // Update central circle - mainly the color change, but it happens before 
         const circle = svg.selectAll(".circle")
             .data([avgSST]);
 
+        // the central circle 
         circle.enter()
             .append("circle")
             .attr("class", "circle")
@@ -78,10 +79,11 @@ function animate() {
             .style("stroke", "red")
             .style("fill", colorScale(avgSST));
 
-        // Update anomaly points
+        // Update anomaly points - here the points change according to new data
         const anomalyPoints = svg.selectAll(".anomaly-point")
             .data(points);
 
+        // the points are drawn
         anomalyPoints.enter()
             .append("circle")
             .attr("class", "anomaly-point")
@@ -95,7 +97,7 @@ function animate() {
 
         anomalyPoints.exit().remove();
 
-        // Schedule the next update
+        // next update, for new data according to the new year
         yearIndex = (yearIndex + 1) % years.length;
         setTimeout(update, transitionDuration);
     }
