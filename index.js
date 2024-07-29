@@ -23,6 +23,18 @@ d3.json("oceanData.json")
     console.error("Error loading the data:", error);
   });
 
+function getSeasonColor(season) {
+  if ((season === "winter")) {
+    return "floralwhite";
+  } else if ((season === "spring")) {
+    return "yellow";
+  } else if ((season === "summer")) {
+    return "green";
+  } else if ((season === "fall")) {
+    return "brown";
+  }
+}
+
 function animate() {
   let yearIndex = 0;
 
@@ -75,6 +87,7 @@ function animate() {
       const scaledRadius = radius + anomalyScale(d.anomaly); // Distance from center
 
       return {
+        season: d.season,
         x: centerX + scaledRadius * Math.cos(angle),
         y: centerY + scaledRadius * Math.sin(angle),
         angle: angle,
@@ -91,8 +104,8 @@ function animate() {
       .attr("class", "label")
       .merge(label)
       .attr("x", width / 2)
-      .attr("y", height/3) 
-      .style("fill", "white") 
+      .attr("y", height / 3)
+      .style("fill", "white")
       .style("font-size", "24px")
       .style("text-anchor", "middle")
       .text(years[yearIndex]); // Update the text after fading out
@@ -126,7 +139,13 @@ function animate() {
       .attr("cx", (d) => d.x)
       .attr("cy", (d) => d.y)
       .attr("r", circleRadius)
-      .style("fill", "red");
+      .style("stroke", function (d) {
+        return getSeasonColor(d.season);
+        
+      })
+      .style("fill", function (d) {
+        return getSeasonColor(d.season);
+      });
 
     anomalyPoints.exit().remove();
 
