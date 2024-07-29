@@ -7,6 +7,7 @@ const transitionDuration = 2000; // transition duration in milliseconds
 const years = [1982, 1992, 2002, 2012, 2022];
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+
 const svg = d3
   .select("#myVis")
   .append("svg")
@@ -201,6 +202,7 @@ function animate() {
             .attr("r", circleRadius);
           hideInfo();
         })
+   
     
     yearIndex = (yearIndex + 1) % years.length;
     setTimeout(update, transitionDuration);
