@@ -162,6 +162,8 @@ function animate() {
           .style("stroke-width", "0.55px")
           .style("opacity", 0);
 
+    
+
     function showInfo(x, y, d) {
         infoBox.transition()
                 .duration(100)
