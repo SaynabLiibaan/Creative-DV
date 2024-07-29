@@ -67,11 +67,11 @@ function animate() {
       .domain([minSST, maxSST]) // Adjust the domain based on the SST range
       .range(["blue", "red"]); // Blue for cold, red for hot
 
-    // Angle scale for positioning points around the circle
-    const angleScale = d3
-      .scaleLinear()
-      .domain([0, 12]) // Start from 0 to 12 for equal spacing
-      .range([0, 2 * Math.PI]); // This starts from 0 to 2 * Math.PI
+   // Angle scale for positioning points around the circle, with 0 degrees at the top
+   const angleScale = d3.scaleLinear()
+   .domain([0, 12]) // Start from 0 to 12 for equal spacing
+   .range([-Math.PI / 2, 3 * Math.PI / 2]); // Start from -90 degrees to 270 degrees
+
 
     // Max anomaly for scaling
     const anomalyMax = d3.max(tempData, (d) => d.anomaly);
@@ -104,9 +104,9 @@ function animate() {
       .attr("class", "label")
       .merge(label)
       .attr("x", width / 2)
-      .attr("y", height / 3)
-      .style("fill", "white")
-      .style("font-size", "24px")
+      .attr("y", height/4) 
+      .style("fill", "white") 
+      .style("font-size", "40px")
       .style("text-anchor", "middle")
       .text(years[yearIndex]); // Update the text after fading out
 
