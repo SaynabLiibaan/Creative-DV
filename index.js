@@ -38,8 +38,6 @@ function animate() {
 
   function update() {
     const tempData = oceanData[yearIndex];
-    console.log("tempData is: ", tempData);
-
     const avgSST = d3.mean(tempData, (d) => d.SST);
     const centerX = width / 2;
     const centerY = height / 2;
@@ -48,11 +46,9 @@ function animate() {
 
     oceanData.forEach((d) => {
       if (d.length > 0) {
-        AverageSSTofYears.push(d3.mean(d, (d) => d.SST));
+        AverageSSTofYears.push(d[0].SST);
       }
     });
-
-    console.log("AverageSSTofYears: ", AverageSSTofYears);
 
     const minSST = d3.min(AverageSSTofYears);
     const maxSST = d3.max(AverageSSTofYears);
@@ -64,6 +60,10 @@ function animate() {
     const angleScale = d3.scaleLinear()
       .domain([0, 12])
       .range([-Math.PI / 2, 3 * Math.PI / 2]);
+
+    const anomalies = tempData.map(function (d) {
+      return d.anomaly;
+    });
 
     const anomalyMax = d3.max(tempData, (d) => d.anomaly);
 
@@ -137,26 +137,28 @@ function animate() {
 
     anomalyPoints.exit().remove();
 
-    var infoBox = svg.append("rect")
-      .attr("class", "box")
+    var infoBox = svg.selectAll(".info-box").data([null]);
+
+    infoBox.enter()
+      .append("rect")
+      .attr("class", "info-box")
       .attr("height", 40)
       .attr("width", 100)
       .style("fill", "rgba(255, 255, 255, 0.6)")
-      .style("opacity", 0);
+      .style("opacity", 0)
+      .merge(infoBox);
 
-    var textBox1 = svg.append("text")
+    var textBox = svg.selectAll(".info-text").data([null]);
+
+    textBox.enter()
+      .append("text")
+      .attr("class", "info-text")
       .style("font-size", 12)
       .style("fill", "rgba(2, 38, 132, 0.91)")
       .style("stroke", "black")
       .style("stroke-width", "0.55px")
-      .style("opacity", 0);
-
-    var textBox2 = svg.append("text")
-      .style("font-size", 12)
-      .style("fill", "rgba(2, 38, 132, 0.91)")
-      .style("stroke", "black")
-      .style("stroke-width", "0.55px")
-      .style("opacity", 0);
+      .style("opacity", 0)
+      .merge(textBox);
 
     function showInfo(x, y, d) {
       infoBox.transition()
@@ -165,45 +167,37 @@ function animate() {
         .attr("x", x + 10)
         .attr("y", y - 30);
 
-      textBox1.transition()
+      textBox.transition()
         .duration(100)
         .style("opacity", 1)
         .attr("x", x + 15)
         .attr("y", y - 15)
-        .text(monthNames[d.month - 1]);
+        .text(monthNames[d.month - 1] + " : " + d.anomaly.toFixed(2));
 
-      textBox2.transition()
-        .duration(100)
-        .style("opacity", 1)
-        .attr("x", x + 15)
-        .attr("y", y)
-        .text("Anomaly: " + d.anomaly.toFixed(2));
+        
     }
 
     function hideInfo() {
       infoBox.transition()
         .duration(200)
         .style("opacity", 0);
-      textBox1.transition()
-        .duration(200)
-        .style("opacity", 0);
-      textBox2.transition()
+      textBox.transition()
         .duration(200)
         .style("opacity", 0);
     }
 
-    anomalyPoints.on("mouseover", function(event, d) {
+    anomalyPoints.on("mouseover", function (event, d) {
       d3.select(this).transition()
         .duration(100)
         .attr("r", 10);
       showInfo(d.x, d.y, d);
     })
-      .on("mouseout", function(d) {
-        d3.select(this).transition()
-          .duration(100)
-          .attr("r", circleRadius);
-        hideInfo();
-      });
+    .on("mouseout", function () {
+      d3.select(this).transition()
+        .duration(100)
+        .attr("r", circleRadius);
+      hideInfo();
+    });
 
     yearIndex = (yearIndex + 1) % years.length;
     setTimeout(update, transitionDuration);
