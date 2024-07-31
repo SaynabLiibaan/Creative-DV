@@ -7,7 +7,6 @@ const transitionDuration = 2000; // transition duration in milliseconds
 const years = [1982, 1992, 2002, 2012, 2022];
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-
 const svg = d3
   .select("#myVis")
   .append("svg")
@@ -20,17 +19,16 @@ d3.json("oceanData.json")
   .then(function (data) {
     oceanData = data;
     animate();
-  })
-  
+  });
 
 function getSeasonColor(season) {
-  if ((season === "winter")) {
+  if (season === "winter") {
     return "floralwhite";
-  } else if ((season === "spring")) {
+  } else if (season === "spring") {
     return "yellow";
-  } else if ((season === "summer")) {
+  } else if (season === "summer") {
     return "green";
-  } else if ((season === "fall")) {
+  } else if (season === "fall") {
     return "brown";
   }
 }
@@ -39,8 +37,8 @@ function animate() {
   let yearIndex = 0;
 
   function update() {
-    const tempData = oceanData[yearIndex]; 
-    console.log("tempData is: " + tempData);
+    const tempData = oceanData[yearIndex];
+    console.log("tempData is: ", tempData);
 
     const avgSST = d3.mean(tempData, (d) => d.SST);
     const centerX = width / 2;
@@ -50,42 +48,38 @@ function animate() {
 
     oceanData.forEach((d) => {
       if (d.length > 0) {
-        AverageSSTofYears.push(d[0].SST);
+        AverageSSTofYears.push(d3.mean(d, (d) => d.SST));
       }
     });
 
-    console.log("AverageSSTofYears: " + AverageSSTofYears);
+    console.log("AverageSSTofYears: ", AverageSSTofYears);
 
     const minSST = d3.min(AverageSSTofYears);
     const maxSST = d3.max(AverageSSTofYears);
 
-  
     const colorScale = d3.scaleLinear()
-                        .domain([minSST, AverageSSTofYears[1], AverageSSTofYears[2], AverageSSTofYears[3], maxSST])
-                        .range(["darkblue", "rgb(51, 70, 181)", "purple", "rgb(194, 62, 194)", "red"]);
-
+      .domain([minSST, AverageSSTofYears[1], AverageSSTofYears[2], AverageSSTofYears[3], maxSST])
+      .range(["darkblue", "rgb(51, 70, 181)", "purple", "rgb(194, 62, 194)", "red"]);
 
     const angleScale = d3.scaleLinear()
-      .domain([0, 12]) 
-      .range([-Math.PI / 2, 3 * Math.PI / 2]); 
+      .domain([0, 12])
+      .range([-Math.PI / 2, 3 * Math.PI / 2]);
 
-
-    
     const anomalyMax = d3.max(tempData, (d) => d.anomaly);
 
     const anomalyScale = d3
       .scaleLinear()
       .domain([0, anomalyMax])
-      .range([0, anomalyOffset]); 
+      .range([0, anomalyOffset]);
 
- 
     const points = tempData.map((d) => {
-      const angle = angleScale(d.month - 1); 
-      const scaledRadius = radius + anomalyScale(d.anomaly); 
+      const angle = angleScale(d.month - 1);
+      const scaledRadius = radius + anomalyScale(d.anomaly);
 
       return {
         month: d.month,
         season: d.season,
+        anomaly: d.anomaly,
         x: centerX + scaledRadius * Math.cos(angle),
         y: centerY + scaledRadius * Math.sin(angle),
         angle: angle,
@@ -93,22 +87,20 @@ function animate() {
       };
     });
 
-    const label = svg.selectAll(".label").data([years[yearIndex]]); 
+    const label = svg.selectAll(".label").data([years[yearIndex]]);
 
-    
     label
       .enter()
       .append("text")
       .attr("class", "label")
       .merge(label)
       .attr("x", width / 2)
-      .attr("y", height/4) 
-      .style("fill", "white") 
+      .attr("y", height / 4)
+      .style("fill", "white")
       .style("font-size", "40px")
       .style("text-anchor", "middle")
-      .text(years[yearIndex]); 
+      .text(years[yearIndex]);
 
-    
     const circle = svg.selectAll(".circle").data([avgSST]);
 
     circle
@@ -124,7 +116,6 @@ function animate() {
       .style("stroke", "red")
       .style("fill", colorScale(avgSST));
 
-    
     const anomalyPoints = svg.selectAll(".anomaly-point").data(points);
 
     anomalyPoints
@@ -139,7 +130,6 @@ function animate() {
       .attr("r", circleRadius)
       .style("stroke", function (d) {
         return getSeasonColor(d.season);
-        
       })
       .style("fill", function (d) {
         return getSeasonColor(d.season);
@@ -147,67 +137,79 @@ function animate() {
 
     anomalyPoints.exit().remove();
 
-  
     var infoBox = svg.append("rect")
-          .attr("class", "box")
-          .attr("height", 20)
-          .attr("width", 60)
-          .style("fill", "rgba(255, 255, 255, 0.6)")
-          .style("opacity", 0);
+      .attr("class", "box")
+      .attr("height", 40)
+      .attr("width", 100)
+      .style("fill", "rgba(255, 255, 255, 0.6)")
+      .style("opacity", 0);
 
-    var textBox = svg.append("text")
-          .style("font-size", 12)
-          .style("fill", "rgba(2, 38, 132, 0.91)")
-          .style("stroke", "black")
-          .style("stroke-width", "0.55px")
-          .style("opacity", 0);
+    var textBox1 = svg.append("text")
+      .style("font-size", 12)
+      .style("fill", "rgba(2, 38, 132, 0.91)")
+      .style("stroke", "black")
+      .style("stroke-width", "0.55px")
+      .style("opacity", 0);
 
-    
+    var textBox2 = svg.append("text")
+      .style("font-size", 12)
+      .style("fill", "rgba(2, 38, 132, 0.91)")
+      .style("stroke", "black")
+      .style("stroke-width", "0.55px")
+      .style("opacity", 0);
 
     function showInfo(x, y, d) {
-        infoBox.transition()
-                .duration(100)
-                .style("opacity", 1)
-                .attr("x", x + 10)
-                .attr("y", y - 20);
+      infoBox.transition()
+        .duration(100)
+        .style("opacity", 1)
+        .attr("x", x + 10)
+        .attr("y", y - 30);
 
-        textBox.transition()
-                .duration(100)
-                .style("opacity", 1)
-                .attr("x", x + 15)
-                .attr("y", y - 5)
-                .text(monthNames[d.month - 1]);
+      textBox1.transition()
+        .duration(100)
+        .style("opacity", 1)
+        .attr("x", x + 15)
+        .attr("y", y - 15)
+        .text(monthNames[d.month - 1]);
+
+      textBox2.transition()
+        .duration(100)
+        .style("opacity", 1)
+        .attr("x", x + 15)
+        .attr("y", y)
+        .text("Anomaly: " + d.anomaly.toFixed(2));
     }
 
     function hideInfo() {
-        infoBox.transition()
-                .duration('200')
-                .style("opacity", 0);
-        textBox.transition()
-                .duration('200')
-                .style("opacity", 0);
+      infoBox.transition()
+        .duration(200)
+        .style("opacity", 0);
+      textBox1.transition()
+        .duration(200)
+        .style("opacity", 0);
+      textBox2.transition()
+        .duration(200)
+        .style("opacity", 0);
     }
 
-    
     anomalyPoints.on("mouseover", function(event, d) {
-          d3.select(this).transition()
-            .duration("100")
-            .attr("r", 10);
-          showInfo(d.x, d.y, d)
-        })
-        anomalyPoints.on("mouseout", function(d) {
-          d3.select(this).transition()
-            .duration("100")
-            .attr("r", circleRadius);
-          hideInfo();
-        })
-   
-    
+      d3.select(this).transition()
+        .duration(100)
+        .attr("r", 10);
+      showInfo(d.x, d.y, d);
+    })
+      .on("mouseout", function(d) {
+        d3.select(this).transition()
+          .duration(100)
+          .attr("r", circleRadius);
+        hideInfo();
+      });
+
     yearIndex = (yearIndex + 1) % years.length;
     setTimeout(update, transitionDuration);
   }
 
-  update()
+  update();
 }
 
 hideInfo();
