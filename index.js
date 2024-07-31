@@ -142,46 +142,66 @@ function animate() {
     infoBox.enter()
       .append("rect")
       .attr("class", "info-box")
-      .attr("height", 40)
+      .attr("height", 30)
       .attr("width", 100)
       .style("fill", "rgba(255, 255, 255, 0.6)")
       .style("opacity", 0)
       .merge(infoBox);
 
-    var textBox = svg.selectAll(".info-text").data([null]);
+    var monthText = svg.selectAll(".month-text").data([null]);
 
-    textBox.enter()
+    monthText.enter()
       .append("text")
-      .attr("class", "info-text")
+      .attr("class", "month-text")
       .style("font-size", 12)
       .style("fill", "rgba(2, 38, 132, 0.91)")
       .style("stroke", "black")
       .style("stroke-width", "0.55px")
       .style("opacity", 0)
-      .merge(textBox);
+      .merge(monthText);
+
+    var anomalyText = svg.selectAll(".anomaly-text").data([null]);
+
+    anomalyText.enter()
+      .append("text")
+      .attr("class", "anomaly-text")
+      .style("font-size", 12)
+      .style("fill", "rgba(2, 38, 132, 0.91)")
+      .style("stroke", "black")
+      .style("stroke-width", "0.55px")
+      .style("opacity", 0)
+      .merge(anomalyText);
 
     function showInfo(x, y, d) {
       infoBox.transition()
         .duration(100)
         .style("opacity", 1)
         .attr("x", x + 10)
-        .attr("y", y - 30);
+        .attr("y", y - 35);
 
-      textBox.transition()
+      monthText.transition()
         .duration(100)
         .style("opacity", 1)
         .attr("x", x + 15)
-        .attr("y", y - 15)
-        .text(monthNames[d.month - 1] + " : " + d.anomaly.toFixed(2));
+        .attr("y", y - 25)
+        .text(monthNames[d.month - 1]);
 
-        
+      anomalyText.transition()
+        .duration(100)
+        .style("opacity", 1)
+        .attr("x", x + 15)
+        .attr("y", y - 10)
+        .text("Anomaly: " + d.anomaly.toFixed(2));
     }
 
     function hideInfo() {
       infoBox.transition()
         .duration(200)
         .style("opacity", 0);
-      textBox.transition()
+      monthText.transition()
+        .duration(200)
+        .style("opacity", 0);
+      anomalyText.transition()
         .duration(200)
         .style("opacity", 0);
     }
