@@ -2,7 +2,7 @@ const width = 1000;
 const height = 960;
 const radius = 50;
 const anomalyOffset = 100; // from circle to points
-const circleRadius = 2;
+const circleRadius = 3;
 const transitionDuration = 2000; // transition duration in milliseconds
 const years = [1982, 1992, 2002, 2012, 2022];
 
@@ -23,15 +23,16 @@ d3.json("oceanData.json")
     console.error("Error loading the data:", error);
   });
 
+  //https://htmlcolorcodes.com/color-picker/
 function getSeasonColor(season) {
   if ((season === "winter")) {
-    return "floralwhite";
+    return "#4682B4";
   } else if ((season === "spring")) {
-    return "yellow";
+    return "#FCF55F";
   } else if ((season === "summer")) {
-    return "green";
+    return "#4CBB17";
   } else if ((season === "fall")) {
-    return "brown";
+    return "#F08000";
   }
 }
 
@@ -139,10 +140,7 @@ function animate() {
       .attr("cx", (d) => d.x)
       .attr("cy", (d) => d.y)
       .attr("r", circleRadius)
-      .style("stroke", function (d) {
-        return getSeasonColor(d.season);
-        
-      })
+      .style("stroke", "black")
       .style("fill", function (d) {
         return getSeasonColor(d.season);
       });
