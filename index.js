@@ -59,13 +59,12 @@ function animate() {
     const minSST = d3.min(AverageSSTofYears);
     const maxSST = d3.max(AverageSSTofYears);
 
+  
+    const colorScale = d3.scaleLinear()
+                        .domain([minSST, AverageSSTofYears[1], AverageSSTofYears[2], AverageSSTofYears[3], maxSST])
+                        .range(["darkblue", "rgb(51, 70, 181)", "purple", "rgb(194, 62, 194)", "red"]);
 
-    const colorScale = d3
-      .scaleLinear()
-      .domain([minSST, maxSST]) 
-      .range(["blue", "red"]); 
 
-    
     const angleScale = d3.scaleLinear()
       .domain([0, 12]) 
       .range([-Math.PI / 2, 3 * Math.PI / 2]); 
