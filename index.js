@@ -58,8 +58,8 @@ function legend() {
   var annotationText =
     "The colored points represent anomalies in the average global land temperature of each month in the relevant year. " +
     "The position of the anomaly points are relative to the outline of the bigger circle. " +
-    "Any points located on top of the circle's outline have temperature anomaly of 0 degrees celcius. " +
-    "Points outside the circle represent positive celcius degrees, while points inside the circle represent negative celcius degrees. " +
+    "Any points located on top of the circle's outline have temperature anomaly of 0 degrees celsius. " +
+    "Points outside the circle represent positive celsius degrees, while points inside the circle represent negative celsius degrees. " +
     "Hover the points to see specific information.";
 
   const legendContainer = svg
