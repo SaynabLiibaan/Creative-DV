@@ -13,7 +13,7 @@ const svg = d3
   .attr("height", height)
   .style("background-color", "black")
   .style("margin", 0)
-  .style("padding", 0)
+  .style("padding", 0);
 
 let oceanData = [];
 d3.json("oceanData.json")
@@ -47,58 +47,48 @@ function legend() {
     "Fall months: September, October, November",
   ];
   var colors = ["#4682B4", "#FCF55F", "#4CBB17", "#F08000"];
-  // Create and style the button
-  const button = d3
-    .select("body")
-    .append("button")
-    .attr("id", "toggleLegend")
-    .text("Toggle Legend")
-    .style("position", "absolute")
-    .style("top", "20px")
-    .style("left", "20px")
-    .style("padding", "10px 20px")
-   // .style("z-index", 1000);
 
   // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform
-
   //Did not know how to access the height variable, so just formatted a string for the translate attribute
   //Initial hidden position
-  var translateString = "translate(0, " + height + ")"
+  var translateString = "translate(0, " + height + ")";
   //Position when shown
-  var translateStringOut = "translate(0, " + (height-300) + ")"
+  var translateStringOut = "translate(0, " + (height - 300) + ")";
 
-  var annotationText = 
+  var annotationText =
     "The colored points represent anomalies in the average global land temperature of each month in the relevant year. " +
     "The position of the anomaly points are relative to the outline of the bigger circle. " +
     "Any points located on top of the circle's outline have temperature anomaly of 0 degrees celcius. " +
     "Points outside the circle represent positive celcius degrees, while points inside the circle represent negative celcius degrees. " +
-    "Hover the points to see specific information."
-  
+    "Hover the points to see specific information.";
+
   const legendContainer = svg
     .append("g")
     .attr("id", "legendContainer")
-    .attr("transform", translateString) // Position it off-screen initially
-    .style("transition", "transform 0.5s"); // CSS transition for sliding
+    .attr("transform", translateString) 
+    .style("transition", "transform 0.5s");
 
   legendContainer
-  .append("foreignObject")
-  .attr("width",400)
-  .attr("height",200)
-  .attr("x", 100)
-  .attr("y", 100)
-  .append("xhtml:div")
-  .style("font-size", "16px")
-  .style("color", "white")
-  .style("overflow", "hidden")
-  .text(annotationText);
+    .append("foreignObject")
+    .attr("width", width / 3)
+    .attr("height", 200)
+    .attr("x", 100)
+    .attr("y", 95)
+    .append("xhtml:div")
+    .style("font-size", "16px")
+    .style("color", "white")
+    .style("overflow", "hidden")
+    .style("padding", 0)
+    .style("margin", 0)
+    .text(annotationText);
 
-  // Add the circles to the legend
+  // Circle colors for the months
   legendContainer
     .selectAll("anomalyCircles")
     .data(months)
     .enter()
     .append("circle")
-    .attr("cx", width/2)
+    .attr("cx", width / 2)
     .attr("cy", function (d, i) {
       return 100 + i * 30;
     })
@@ -107,19 +97,20 @@ function legend() {
       return colors[i];
     });
 
-  // Add the labels to the legend
+  //Color labels description
   legendContainer
     .selectAll("anomalyLabel")
     .data(months)
     .enter()
     .append("text")
-    .attr("x", width/2 + 20)
+    .attr("x", width / 2 + 20)
     .attr("y", function (d, i) {
       return 100 + i * 30;
     })
-    .style("fill", function (d, i) {
-      return colors[i];
-    })
+    // .style("fill", function (d, i) {
+    //   return colors[i];
+    // })
+    .style("fill", "white")
     .text(function (d) {
       return d;
     })
@@ -127,18 +118,69 @@ function legend() {
     .style("font-size", "16px")
     .style("alignment-baseline", "middle");
 
-  // Toggle legend visibility on button click
-  button.on("click", function () {
+  // Legend visibility on button click
+  svg.on("click", function () {
     if (legendContainer.classed("visible")) {
       legendContainer
         .classed("visible", false)
-        .attr("transform", translateString); // Move off-screen
+        .attr("transform", translateString); // Move
     } else {
       legendContainer
         .classed("visible", true)
         .attr("transform", translateStringOut); // Move on-screen
     }
   });
+
+  //https://www.freshconsulting.com/insights/blog/d3-js-gradients-the-easy-way/
+  var gradient = legendContainer
+    .append("defs")
+    .append("linearGradient")
+    .attr("id", "idGradient")
+    .attr("x1", "0%")
+    .attr("x2", "0%")
+    .attr("y1", "100%")
+    .attr("y2", "0%");
+
+  gradient
+    .append("stop")
+    .attr("class", "start")
+    .attr("offset", "0%")
+    .attr("stop-color", "blue")
+    .attr("stop-opacity", 1);
+
+  gradient
+    .append("stop")
+    .attr("class", "end")
+    .attr("offset", "100%")
+    .attr("stop-color", "red")
+    .attr("stop-opacity", 1);
+
+  var colorBar = legendContainer
+    .append("rect")
+    .attr("x", width - 200)
+    .attr("y", 110)
+    .attr("width", 50)
+    .attr("height", 70)
+    //.attr("stroke", "url(#idGradient)")
+    .attr("fill", "url(#idGradient)");
+
+  var hottestSST = legendContainer
+    .append("text")
+    .attr("x", width - 175)
+    .attr("y", 100)
+    .text("20.65 °C")
+    .style("fill", "white")
+    .style("font-size", "14px")
+    .style("text-anchor", "middle");
+
+  var coldestSST = legendContainer
+    .append("text")
+    .attr("x", width - 175)
+    .attr("y", 200)
+    .text("20.05 °C")
+    .style("fill", "white")
+    .style("font-size", "14px")
+    .style("text-anchor", "middle");
 }
 
 function animate() {
