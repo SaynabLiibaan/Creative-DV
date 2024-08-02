@@ -56,8 +56,9 @@ function legend() {
   var translateStringOut = "translate(0, " + (height - 300) + ")";
 
   var annotationText =
+    "The color of the big circle represents the average Sea Surface Temperature for the year, and shows a change for each year. " + 
     "The colored points represent anomalies in the average global land temperature of each month in the relevant year. " +
-    "The position of the anomaly points are relative to the outline of the bigger circle. " +
+    //"The position of the anomaly points are relative to the outline of the bigger circle. " +
     "Any points located on top of the circle's outline have temperature anomaly of 0 degrees celsius. " +
     "Points outside the circle represent positive celsius degrees, while points inside the circle represent negative celsius degrees. " +
     "Hover the points to see specific information.";
