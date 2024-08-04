@@ -137,6 +137,8 @@ function animate() {
 
     anomalyPoints.exit().remove();
 
+
+    //creating infobox and adding its attributes
     var infoBox = svg.selectAll(".info-box").data([null]);
 
     infoBox.enter()
@@ -148,6 +150,8 @@ function animate() {
       .style("opacity", 0)
       .merge(infoBox);
 
+
+    //creating the textbox inside the infobox and adding its attributes (this is the one for the months)
     var monthText = svg.selectAll(".month-text").data([null]);
 
     monthText.enter()
@@ -160,6 +164,8 @@ function animate() {
       .style("opacity", 0)
       .merge(monthText);
 
+
+    //creating the textbox inside the infobox and adding its attributes (this is the one for the anomaly)
     var anomalyText = svg.selectAll(".anomaly-text").data([null]);
 
     anomalyText.enter()
@@ -172,6 +178,8 @@ function animate() {
       .style("opacity", 0)
       .merge(anomalyText);
 
+    
+    //function that makes the infobox transition and displays both the month and the anomaly text
     function showInfo(x, y, d) {
       infoBox.transition()
         .duration(100)
@@ -191,9 +199,11 @@ function animate() {
         .style("opacity", 1)
         .attr("x", x + 15)
         .attr("y", y - 10)
-        .text("Anomaly: " + d.anomaly.toFixed(2));
+        .text("Anomaly: " + d.anomaly)
     }
 
+
+    //function that hides the infobox by making the opacity of the box 0
     function hideInfo() {
       infoBox.transition()
         .duration(200)
@@ -206,6 +216,8 @@ function animate() {
         .style("opacity", 0);
     }
 
+
+    //mouseevent on the anomaly points which triggers the showInfo function when it's a 'mouseover' event and triggers the hideInfo when it's a 'mouseout' event
     anomalyPoints.on("mouseover", function (event, d) {
       d3.select(this).transition()
         .duration(100)
@@ -226,4 +238,4 @@ function animate() {
   update();
 }
 
-hideInfo();
+
