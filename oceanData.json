@@ -13,8 +13,6 @@
     { "year": 1982, "SST": 20.0516, "month": 11, "season": "fall", "anomaly": -0.16 },
     { "year": 1982, "SST": 20.0516, "month": 12, "season": "winter", "anomaly": 0.64}
 	], 
-
-
   	[
 	{ "year": 1992, "SST": 20.0694, "month": 1, "season": "winter", "anomaly": 0.78},
     { "year": 1992, "SST": 20.0694, "month": 2, "season": "winter", "anomaly": 0.71 },
@@ -29,7 +27,6 @@
     { "year": 1992, "SST": 20.0694, "month": 11, "season": "fall", "anomaly": -0.16 },
     { "year": 1992, "SST": 20.0694, "month": 12, "season": "winter", "anomaly": 0.26 }
  	], 
-
 	[
 	{ "year": 2002, "SST": 20.3216, "month": 1, "season": "winter", "anomaly": 1.18 },
     { "year": 2002, "SST": 20.3216, "month": 2, "season": "winter", "anomaly": 1.13 },
@@ -44,7 +41,6 @@
     { "year": 2002, "SST": 20.3216, "month": 11, "season": "fall", "anomaly": 0.87 },
     { "year": 2002, "SST": 20.3216, "month": 12, "season": "winter", "anomaly": 0.57}
 	],
-
 	[
 	{ "year": 2012, "SST": 20.3693, "month": 1, "season": "winter", "anomaly": 0.87 },
 	{ "year": 2012, "SST": 20.3693, "month": 2, "season": "winter", "anomaly": 0.82},
@@ -59,7 +55,6 @@
 	{ "year": 2012, "SST": 20.3693, "month": 11, "season": "fall", "anomaly": 1.29 },
 	{ "year": 2012, "SST": 20.3693, "month": 12, "season": "winter", "anomaly": 0.60}
 	],
-
 	[
 	{ "year": 2022, "SST": 20.6485, "month": 1, "season": "winter", "anomaly": 1.50 },
 	{ "year": 2022, "SST": 20.6485, "month": 2, "season": "winter", "anomaly": 1.48},
@@ -73,12 +68,5 @@
 	{ "year": 2022, "SST": 20.6485, "month": 10, "season": "fall", "anomaly": 1.61 },
 	{ "year": 2022, "SST": 20.6485, "month": 11, "season": "fall", "anomaly": 0.94 },
 	{ "year": 2022, "SST": 20.6485, "month": 12, "season": "winter", "anomaly": 1.17}
-
-
-
 	]
-
-
-
-
   ]
