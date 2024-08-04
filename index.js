@@ -221,7 +221,6 @@ function animate() {
     anomalyPoints.on("mouseover", function (event, d) {
       d3.select(this).transition()
         .duration(100)
-        .attr("r", 10);
       showInfo(d.x, d.y, d);
     })
     .on("mouseout", function () {
