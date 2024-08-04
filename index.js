@@ -226,7 +226,6 @@ function animate() {
     .on("mouseout", function () {
       d3.select(this).transition()
         .duration(100)
-        .attr("r", circleRadius);
       hideInfo();
     });
 
