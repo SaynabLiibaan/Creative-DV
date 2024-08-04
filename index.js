@@ -5,6 +5,7 @@ const anomalyOffset = 100; // from circle to points
 const circleRadius = 3;
 const transitionDuration = 2000; // transition duration in milliseconds
 const years = [1982, 1992, 2002, 2012, 2022];
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 const svg = d3
   .select("#myVis")
@@ -146,7 +147,7 @@ function legend() {
     .append("stop")
     .attr("class", "start")
     .attr("offset", "0%")
-    .attr("stop-color", "blue")
+    .attr("stop-color", "darkblue")
     .attr("stop-opacity", 1);
 
   gradient
@@ -188,33 +189,25 @@ function animate() {
   let yearIndex = 0;
 
   function update() {
-    const tempData = oceanData[yearIndex]; // Access the data for the current year
-    console.log(tempData);
-
+    const tempData = oceanData[yearIndex];
     const avgSST = d3.mean(tempData, (d) => d.SST);
     const centerX = width / 2;
     const centerY = height / 2;
 
-    //Retrieve the SST's for each year and put into an array for domain.
     var AverageSSTofYears = [];
 
     oceanData.forEach((d) => {
       if (d.length > 0) {
-        // First months SST of the year, since the SST is the same for every month
         AverageSSTofYears.push(d[0].SST);
       }
     });
 
-    console.log(AverageSSTofYears);
-
     const minSST = d3.min(AverageSSTofYears);
     const maxSST = d3.max(AverageSSTofYears);
 
-    // Color scale for SST
-    const colorScale = d3
-      .scaleLinear()
-      .domain([minSST, maxSST]) // Adjust the domain based on the SST range
-      .range(["blue", "red"]); // Blue for cold, red for hot
+    const colorScale = d3.scaleLinear()
+      .domain([minSST, maxSST])
+      .range(["darkblue", "red"]);
 
     // Angle scale for positioning points around the circle, with 0 degrees at the top
     const angleScale = d3
@@ -222,7 +215,6 @@ function animate() {
       .domain([0, 12]) // Start from 0 to 12 for equal spacing
       .range([-Math.PI / 2, (3 * Math.PI) / 2]); // Start from -90 degrees to 270 degrees
 
-    // Max anomaly for scaling
     const anomalyMax = d3.max(tempData, (d) => d.anomaly);
 
     const anomalyScale = d3
@@ -230,13 +222,14 @@ function animate() {
       .domain([0, 2.01]) //change this to 2.01
       .range([0, anomalyOffset]); // This is from 0 to 100 which is how far from the circle it can be
 
-    // Calculate points for the current year
     const points = tempData.map((d) => {
-      const angle = angleScale(d.month - 1); // Adjust to start from 0 for equal spacing
-      const scaledRadius = radius + anomalyScale(d.anomaly); // Distance from center
+      const angle = angleScale(d.month - 1);
+      const scaledRadius = radius + anomalyScale(d.anomaly);
 
       return {
+        month: d.month,
         season: d.season,
+        anomaly: d.anomaly,
         x: centerX + scaledRadius * Math.cos(angle),
         y: centerY + scaledRadius * Math.sin(angle),
         angle: angle,
@@ -244,22 +237,20 @@ function animate() {
       };
     });
 
-    const label = svg.selectAll(".label").data([years[yearIndex]]); // Use the current year as data
+    const label = svg.selectAll(".label").data([years[yearIndex]]);
 
-    // Enter selection for adding new labels
     label
       .enter()
       .append("text")
       .attr("class", "label")
       .merge(label)
       .attr("x", width / 2)
-      .attr("y", height / 4)
+      .attr("y", height / 5)
       .style("fill", "white")
       .style("font-size", "40px")
       .style("text-anchor", "middle")
-      .text(years[yearIndex]); // Update the text after fading out
+      .text(years[yearIndex]);
 
-    // Update central circle
     const circle = svg.selectAll(".circle").data([avgSST]);
     circle
       .enter()
@@ -274,7 +265,6 @@ function animate() {
       .style("stroke", "white")
       .style("fill", colorScale(avgSST));
 
-    // Update anomaly points
     const anomalyPoints = svg.selectAll(".anomaly-point").data(points);
 
     anomalyPoints
@@ -294,10 +284,103 @@ function animate() {
 
     anomalyPoints.exit().remove();
 
-    // Schedule the next update
+
+    //creating infobox and adding its attributes
+    var infoBox = svg.selectAll(".info-box").data([null]);
+
+    infoBox.enter()
+      .append("rect")
+      .attr("class", "info-box")
+      .attr("height", 30)
+      .attr("width", 100)
+      .style("fill", "rgba(255, 255, 255, 0.6)")
+      .style("opacity", 0)
+      .merge(infoBox);
+
+
+    //creating the textbox inside the infobox and adding its attributes (this is the one for the months)
+    var monthText = svg.selectAll(".month-text").data([null]);
+
+    monthText.enter()
+      .append("text")
+      .attr("class", "month-text")
+      .style("font-size", 12)
+      .style("fill", "rgba(2, 38, 132, 0.91)")
+      .style("stroke", "black")
+      .style("stroke-width", "0.55px")
+      .style("opacity", 0)
+      .merge(monthText);
+
+
+    //creating the textbox inside the infobox and adding its attributes (this is the one for the anomaly)
+    var anomalyText = svg.selectAll(".anomaly-text").data([null]);
+
+    anomalyText.enter()
+      .append("text")
+      .attr("class", "anomaly-text")
+      .style("font-size", 12)
+      .style("fill", "rgba(2, 38, 132, 0.91)")
+      .style("stroke", "black")
+      .style("stroke-width", "0.55px")
+      .style("opacity", 0)
+      .merge(anomalyText);
+
+    
+    //function that makes the infobox transition and displays both the month and the anomaly text
+    function showInfo(x, y, d) {
+      infoBox.transition()
+        .duration(100)
+        .style("opacity", 1)
+        .attr("x", x + 10)
+        .attr("y", y - 35);
+
+      monthText.transition()
+        .duration(100)
+        .style("opacity", 1)
+        .attr("x", x + 15)
+        .attr("y", y - 25)
+        .text(monthNames[d.month - 1]);
+
+      anomalyText.transition()
+        .duration(100)
+        .style("opacity", 1)
+        .attr("x", x + 15)
+        .attr("y", y - 10)
+        .text("Anomaly: " + d.anomaly)
+    }
+
+
+    //function that hides the infobox by making the opacity of the box 0
+    function hideInfo() {
+      infoBox.transition()
+        .duration(200)
+        .style("opacity", 0);
+      monthText.transition()
+        .duration(200)
+        .style("opacity", 0);
+      anomalyText.transition()
+        .duration(200)
+        .style("opacity", 0);
+    }
+
+
+    //mouseevent on the anomaly points which triggers the showInfo function when it's a 'mouseover' event and triggers the hideInfo when it's a 'mouseout' event
+    anomalyPoints.on("mouseover", function (event, d) {
+      d3.select(this).transition()
+        .duration(100)
+      showInfo(d.x, d.y, d);
+    })
+    .on("mouseout", function () {
+      d3.select(this).transition()
+        .duration(100)
+      hideInfo();
+    });
+
     yearIndex = (yearIndex + 1) % years.length;
     setTimeout(update, transitionDuration);
   }
 
   update();
 }
+
+
